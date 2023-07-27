@@ -1,41 +1,26 @@
-import { useState } from 'react';
-import { nanoid } from 'nanoid';
+import { useDispatch, useSelector } from 'react-redux';
 
 import css from './App.module.css';
 import { Form } from './Form/Form';
 import { ContactList } from './ContactsList/ContactsList';
 import { Filter } from './Filter/Filter';
-import { useLocalStorage } from './hooks/useLocalStorage';
-
-const initContacts = [
-  { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-  { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-  { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-  { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-];
+// import { useLocalStorage } from './hooks/useLocalStorage';
+import { addContact, deleteContact } from 'redux/contacts/contacts.actions';
+import { filterContacts } from 'redux/filter/filter.actions';
 
 export const App = () => {
-  const [contacts, setContacts] = useLocalStorage('contacts', initContacts);
+  const dispatch = useDispatch();
+  
+  const contacts = useSelector(state => state.contacts);
 
-  const [filter, setFilter] = useState('');
-
-  // const [contacts, setContacts] = useState(() => {
-  //   return JSON.parse(localStorage.getItem('contacts')) || initContacts;
-  // });
-
-  // useEffect(() => {
-  //   localStorage.setItem('contacts', JSON.stringify(contacts));
-  // }, [contacts]);
+  const filter = useSelector(state => state.filter);
 
   const handleSubmit = (name, number) => {
     const verifiedContact = contacts.find(
       contact => contact.name.toLowerCase() === name.toLowerCase()
     );
     if (!verifiedContact) {
-      setContacts(prevContacts => [
-        ...prevContacts,
-        { id: nanoid(), name, number },
-      ]);
+      dispatch(addContact(name, number));
     } else {
       return alert(`Contact ${name} already exists`);
     }
@@ -43,13 +28,11 @@ export const App = () => {
 
   const changeFilter = evt => {
     const { value } = evt.currentTarget;
-    setFilter(value);
+    dispatch(filterContacts(value));
   };
 
   const handleDelete = id => {
-    setContacts(prevContacts =>
-      prevContacts.filter(contact => contact.id !== id)
-    );
+    dispatch(deleteContact(id));
   };
 
   const newContacts = contacts.filter(contact =>

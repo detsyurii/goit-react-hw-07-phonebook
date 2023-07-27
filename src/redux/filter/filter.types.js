@@ -1,0 +1,1 @@
+export const FILTER_CONTACTS = 'FILTER_CONTACTS';
