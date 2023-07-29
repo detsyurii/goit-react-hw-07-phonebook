@@ -9,6 +9,7 @@ import { addContact, deleteContact } from 'redux/contacts/contacts.actions';
 import { filterContacts } from 'redux/filter/filter.actions';
 
 export const App = () => {
+  
   const dispatch = useDispatch();
   
   const contacts = useSelector(state => state.contacts);
