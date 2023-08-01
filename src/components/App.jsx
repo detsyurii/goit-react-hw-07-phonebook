@@ -1,14 +1,13 @@
 import { useDispatch, useSelector } from 'react-redux';
 import css from './App.module.css';
+
 import { Form } from './Form/Form';
 import { ContactList } from './ContactsList/ContactsList';
 import { Filter } from './Filter/Filter';
-// import { useLocalStorage } from './hooks/useLocalStorage';
-import { addContact, deleteContact } from 'redux/contacts/contacts.actions';
-import { filterContacts } from 'redux/filter/filter.actions';
+import { addContact, deleteContact } from 'redux/contacts/contacts.slice';
+import { filterContacts } from 'redux/filter/filter.slice';
 
 export const App = () => {
-  
   const dispatch = useDispatch();
 
   const contacts = useSelector(state => state.contacts);
