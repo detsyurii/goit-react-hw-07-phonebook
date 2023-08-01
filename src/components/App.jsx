@@ -1,5 +1,4 @@
 import { useDispatch, useSelector } from 'react-redux';
-
 import css from './App.module.css';
 import { Form } from './Form/Form';
 import { ContactList } from './ContactsList/ContactsList';
@@ -10,17 +9,22 @@ import { filterContacts } from 'redux/filter/filter.actions';
 
 export const App = () => {
   const dispatch = useDispatch();
-  
+
   const contacts = useSelector(state => state.contacts);
 
   const filter = useSelector(state => state.filter);
 
-  const handleSubmit = (name, number) => {
+  const handleSubmit = (id, name, number) => {
     const verifiedContact = contacts.find(
       contact => contact.name.toLowerCase() === name.toLowerCase()
     );
     if (!verifiedContact) {
-      dispatch(addContact(name, number));
+      const newContact = {
+        id,
+        name,
+        number,
+      };
+      dispatch(addContact(newContact));
     } else {
       return alert(`Contact ${name} already exists`);
     }
