@@ -12,7 +12,8 @@ export const Form = ({ onSubmit }) => {
 
   const handleSubmit = evt => {
     evt.preventDefault();
-    onSubmit(name, number);
+    const id = nanoid();
+    onSubmit(id, name, number);
     setName('');
     setNumber('');
   };

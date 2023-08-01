@@ -1,11 +1,10 @@
-import { filterInitState } from './filter.init-state';
-import { FILTER_CONTACTS } from './filter.types';
+import { createReducer } from '@reduxjs/toolkit';
 
-export const filterReducer = (state = filterInitState, action) => {
-  switch (action.type) {
-    case FILTER_CONTACTS:
-      return action.payload;
-    default:
-      return state;
-  }
-};
+import { filterInitState } from './filter.init-state';
+import { filterContacts } from './filter.actions';
+
+export const filterReducer = createReducer(filterInitState, builder => {
+  builder.addCase(filterContacts, (_, action) => {
+    return action.payload;
+  });
+});
