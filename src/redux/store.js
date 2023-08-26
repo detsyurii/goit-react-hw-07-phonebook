@@ -1,51 +1,39 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import {
-  persistStore,
-  persistReducer,
-  FLUSH,
-  REHYDRATE,
-  PAUSE,
-  PERSIST,
-  PURGE,
-  REGISTER,
-} from 'redux-persist';
-
-import storage from 'redux-persist/lib/storage';
+import { configureStore } from '@reduxjs/toolkit';
 
 import { contactsInitState } from './contacts/contacts.init-state';
 import { filterInitState } from './filter/filter.init-state';
 import { contactsReducer } from './contacts/contacts.slice';
 import { filterReducer } from './filter/filter.slice';
 
-const persistConfig = {
-  key: 'phonebook',
-  storage,
-  whitelist: ['contacts'],
-};
-
-const rootReducer = combineReducers({
-  contacts: contactsReducer,
-  filter: filterReducer,
-});
-
-const persistedReducer = persistReducer(persistConfig, rootReducer);
-
 const initState = {
-  contacts: contactsInitState.contacts,
-  filter: filterInitState.filter,
+  contacts: contactsInitState,
+  filter: filterInitState,
 };
 
 export const store = configureStore({
-  reducer: persistedReducer,
+  reducer: {
+    contacts: contactsReducer,
+    filter: filterReducer,
+  },
   devTools: true,
   preloadedState: initState,
-
-  middleware: getDefaultMiddleware =>
-    getDefaultMiddleware({
-      serializableCheck: {
-        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
-      },
-    }),
 });
 
-export const persistor = persistStore(store);
+// console.log(store);
+
+// const getContactsAction = async dispatch => {
+//   dispatch({ type: 'CONTACTS_LOADING' });
+//   try {
+//     const data = await axios.get(CONTACTS_URL);
+//     console.log(data);
+//   } catch (error) {}
+// };
+
+// getContactsAction()
+// const myThunk = store => next => action => {
+//   if (typeof action === 'function') {
+//     action(store.dispatch);
+//     return;
+//   }
+//   next(action);
+// };

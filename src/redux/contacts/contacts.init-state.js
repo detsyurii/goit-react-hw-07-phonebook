@@ -1,5 +1,7 @@
-import { initContacts } from 'components/assets/initContacts';
+// import { initContacts } from 'components/assets/initContacts';
 
 export const contactsInitState = {
-  contacts: initContacts,
+  items: [],
+  isLoading: false,
+  error: null,
 };

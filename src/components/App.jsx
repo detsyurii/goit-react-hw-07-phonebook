@@ -1,18 +1,28 @@
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import css from './App.module.css';
 
+import css from './App.module.css';
 import { Form } from './Form/Form';
 import { ContactList } from './ContactsList/ContactsList';
 import { Filter } from './Filter/Filter';
-import { addContact, deleteContact } from 'redux/contacts/contacts.slice';
 import { filterContacts } from 'redux/filter/filter.slice';
+import {
+  addContactThunk,
+  deleteContactThunk,
+  getContactsThunk,
+} from 'redux/contacts/contacts.thunk';
 
 export const App = () => {
   const dispatch = useDispatch();
 
-  const contacts = useSelector(state => state.contacts);
+  const contacts = useSelector(state => state.contacts.items);
+  const filter = useSelector(state => state.filter.filter);
+  const isLoading = useSelector(state => state.contacts.isLoading);
+  const error = useSelector(state => state.contacts.error);
 
-  const filter = useSelector(state => state.filter);
+  useEffect(() => {
+    dispatch(getContactsThunk());
+  }, [dispatch]);
 
   const handleSubmit = (id, name, number) => {
     const verifiedContact = contacts.find(
@@ -24,7 +34,7 @@ export const App = () => {
         name,
         number,
       };
-      dispatch(addContact(newContact));
+      dispatch(addContactThunk(newContact));
     } else {
       return alert(`Contact ${name} already exists`);
     }
@@ -36,10 +46,10 @@ export const App = () => {
   };
 
   const handleDelete = id => {
-    dispatch(deleteContact(id));
+    dispatch(deleteContactThunk(id));
   };
 
-  const newContacts = contacts.filter(contact =>
+  const newContacts = contacts?.filter(contact =>
     contact.name.toLowerCase().includes(filter.toLowerCase())
   );
 
@@ -50,7 +60,12 @@ export const App = () => {
         <Form onSubmit={handleSubmit} />
         <h2>Contacts</h2>
         <Filter value={filter} onChange={changeFilter} />
-        <ContactList contacts={newContacts} onDelete={handleDelete} />
+
+        {isLoading && <div>Loading...</div>}
+        {error && <div>Error: {error.message}</div>}
+        {contacts && (
+          <ContactList contacts={newContacts} onDelete={handleDelete} />
+        )}
       </div>
     </>
   );
