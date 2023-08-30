@@ -11,14 +11,20 @@ import {
   deleteContactThunk,
   getContactsThunk,
 } from 'redux/contacts/contacts.thunk';
+import {
+  selectContacts,
+  selectError,
+  selectIsLoading,
+} from 'redux/contacts/contacts.selectors';
+import { selectFilter } from 'redux/filter/filter.selectors';
 
 export const App = () => {
   const dispatch = useDispatch();
 
-  const contacts = useSelector(state => state.contacts.items);
-  const filter = useSelector(state => state.filter.filter);
-  const isLoading = useSelector(state => state.contacts.isLoading);
-  const error = useSelector(state => state.contacts.error);
+  const contacts = useSelector(selectContacts);
+  const isLoading = useSelector(selectIsLoading);
+  const error = useSelector(selectError);
+  const filter = useSelector(selectFilter);
 
   useEffect(() => {
     dispatch(getContactsThunk());
@@ -61,8 +67,8 @@ export const App = () => {
         <h2>Contacts</h2>
         <Filter value={filter} onChange={changeFilter} />
 
-        {isLoading && <div>Loading...</div>}
-        {error && <div>Error: {error.message}</div>}
+        {isLoading && <p>Loading...</p>}
+        {error && <p>Error: {error.message}</p>}
         {contacts && (
           <ContactList contacts={newContacts} onDelete={handleDelete} />
         )}
