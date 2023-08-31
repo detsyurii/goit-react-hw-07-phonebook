@@ -14,6 +14,7 @@ import {
 import {
   selectContacts,
   selectError,
+  selectFilteredContacts,
   selectIsLoading,
 } from 'redux/contacts/contacts.selectors';
 import { selectFilter } from 'redux/filter/filter.selectors';
@@ -25,6 +26,7 @@ export const App = () => {
   const isLoading = useSelector(selectIsLoading);
   const error = useSelector(selectError);
   const filter = useSelector(selectFilter);
+  const filteredContacts = useSelector(selectFilteredContacts);
 
   useEffect(() => {
     dispatch(getContactsThunk());
@@ -55,10 +57,6 @@ export const App = () => {
     dispatch(deleteContactThunk(id));
   };
 
-  const newContacts = contacts?.filter(contact =>
-    contact.name.toLowerCase().includes(filter.toLowerCase())
-  );
-
   return (
     <>
       <div className={css.wrapper}>
@@ -70,7 +68,7 @@ export const App = () => {
         {isLoading && <p>Loading...</p>}
         {error && <p>Error: {error.message}</p>}
         {contacts && (
-          <ContactList contacts={newContacts} onDelete={handleDelete} />
+          <ContactList contacts={filteredContacts} onDelete={handleDelete} />
         )}
       </div>
     </>
